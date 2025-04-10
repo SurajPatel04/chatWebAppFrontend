@@ -36,9 +36,17 @@ function ChatPage() {
   const handleSubmit = async () => {
     if (!hold.trim()) return;
 
-    setLoading(true);
     const currentInput = hold;
     setHold("");
+
+    // Immediately show the user input with a loading placeholder
+    const newMessage = {
+      question: currentInput,
+      answer: null, // Placeholder
+    };
+    setChatHistory((prev) => [...prev, newMessage]);
+
+    setLoading(true);
 
     try {
       const response = await axios.post(
@@ -53,13 +61,28 @@ function ChatPage() {
         .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>")
         .replace(/\n/g, "<br />");
 
-      // Add to chat history
-      setChatHistory((prevHistory) => [
-        ...prevHistory,
-        { question: currentInput, answer: formattedOutput },
-      ]);
+      // Replace the last message's answer with the real one
+      setChatHistory((prev) =>
+        prev.map((item, index) =>
+          index === prev.length - 1
+            ? { ...item, answer: formattedOutput }
+            : item,
+        ),
+      );
     } catch (error) {
       console.error("API Error:", error);
+
+      setChatHistory((prev) =>
+        prev.map((item, index) =>
+          index === prev.length - 1
+            ? {
+                ...item,
+                answer:
+                  "<span style='color:red;'>Failed to get a response. Please try again later.</span>",
+              }
+            : item,
+        ),
+      );
     }
 
     setLoading(false);
@@ -192,44 +215,48 @@ function ChatPage() {
             padding: 4,
           }}
         >
-          <Typography
-            variant="h4"
-            align="center"
-            sx={{ fontWeight: "bold", mb: 3, color: "#333" }}
-          >
-            Ask our AI anything
-          </Typography>
+          {chatHistory.length == 0 && (
+            <Typography
+              variant="h4"
+              align="center"
+              sx={{ fontWeight: "bold", mb: 3, color: "#333" }}
+            >
+              What can I help with?
+            </Typography>
+          )}
 
-          <Box
-            sx={{
-              textAlign: "center",
-              mb: 2,
-              flexWrap: "wrap",
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            {suggestedPrompts.map((prompt, index) => (
-              <Chip
-                key={index}
-                label={prompt}
-                onClick={() => {
-                  setHold(prompt);
-                  setTimeout(handleSubmit, 200);
-                }}
-                sx={{
-                  margin: 0.5,
-                  backgroundColor: "#e0e0e0",
-                  cursor: "pointer",
-                  fontSize: "0.9rem",
-                  color: "#333",
-                  "&:hover": {
-                    backgroundColor: "#d0d0d0",
-                  },
-                }}
-              />
-            ))}
-          </Box>
+          {chatHistory.length == 0 && (
+            <Box
+              sx={{
+                textAlign: "center",
+                mb: 2,
+                flexWrap: "wrap",
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              {suggestedPrompts.map((prompt, index) => (
+                <Chip
+                  key={index}
+                  label={prompt}
+                  onClick={() => {
+                    setHold(prompt);
+                    setTimeout(handleSubmit, 200);
+                  }}
+                  sx={{
+                    margin: 0.5,
+                    backgroundColor: "#e0e0e0",
+                    cursor: "pointer",
+                    fontSize: "0.9rem",
+                    color: "#333",
+                    "&:hover": {
+                      backgroundColor: "#d0d0d0",
+                    },
+                  }}
+                />
+              ))}
+            </Box>
+          )}
 
           {chatHistory.map((chat, index) => (
             <Box
@@ -242,6 +269,7 @@ function ChatPage() {
                 boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
               }}
             >
+              {/* User question */}
               <Typography align="right" sx={{ color: "#555" }}>
                 {chat.question}
               </Typography>
@@ -253,16 +281,30 @@ function ChatPage() {
                   <ContentCopyIcon fontSize="small" />
                 </IconButton>
               </Typography>
+
               <br />
+
+              {/* Answer or Loading Spinner */}
               <Typography
                 component="div"
                 sx={{ fontSize: "1rem", color: "#333" }}
-                dangerouslySetInnerHTML={{ __html: chat.answer }}
-              />
+              >
+                {chat.answer === null ? (
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                    <CircularProgress size={18} />
+                    <span>Generating response...</span>
+                  </Box>
+                ) : (
+                  <span dangerouslySetInnerHTML={{ __html: chat.answer }} />
+                )}
+              </Typography>
+
+              {/* Copy button for answer */}
               <Typography align="left">
                 <IconButton
                   size="small"
-                  onClick={() => handleCopy(chat.answer)}
+                  onClick={() => handleCopy(chat.answer ?? "")}
+                  disabled={chat.answer === null}
                 >
                   <ContentCopyIcon fontSize="small" />
                 </IconButton>
@@ -311,7 +353,6 @@ function ChatPage() {
           </Stack>
         </Box>
 
-        {/* Snackbar */}
         <Snackbar
           anchorOrigin={{ vertical: "top", horizontal: "right" }}
           open={openSnackbar}
