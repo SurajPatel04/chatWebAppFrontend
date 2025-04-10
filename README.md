@@ -1,12 +1,118 @@
-# React + Vite
+# 💬 AI Chat Web App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An intelligent chat interface built with **React** and **Material UI**, allowing users to interact with different AI personas. This app connects to a backend API that returns AI-generated responses based on user input.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Features
 
-## Expanding the ESLint configuration
+- 🧠 **AI Chat Interface** — Ask questions and receive real-time responses.
+- 🎭 **Persona Selection** — Choose between:
+  - Hitesh Sir
+  - Piyush Sir
+  - Normal AI
+- ✨ **Prompt Suggestions** — Click to auto-fill common queries.
+- 📋 **Copy to Clipboard** — Easily copy both questions and answers.
+- 💬 **Markdown Support** — Bold text, line breaks, and formatting handled cleanly.
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 🌐 API Endpoint
+
+The app sends requests to the following API:
+
+```
+https://chat-web-app-five.vercel.app/chat
+```
+
+Github Link
+
+```
+https://github.com/SurajPatel04/chatWebAppBackend
+```
+
+**POST Payload Example:**
+
+```json
+{
+  "user": "Your question here",
+  "model_type": "AI" // or "Hitesh Sir", "Piyush Sir"
+}
+```
+
+---
+
+## 🖼️ Preview
+
+---
+
+## 🧩 Built With
+
+- [React](https://reactjs.org/)
+- [Material UI](https://mui.com/)
+- [Axios](https://axios-http.com/)
+
+---
+
+## 📦 Setup Instructions
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/your-username/ai-chat-app.git
+cd ai-chat-app
+```
+
+### 2. Install Dependencies
+
+```bash
+npm install
+```
+
+### 3. Run the App
+
+```bash
+npm start
+```
+
+The app will open in your browser at [http://localhost:3000](http://localhost:3000)
+
+---
+
+## 📁 Project Structure
+
+```
+src/
+│
+├── assets/                 # Persona images
+│   ├── channels4_profile.jpg
+│   ├── piyush.jpeg
+│   └── AI.jpeg
+│
+├── components/
+│   └── ChatPage.jsx        # Main chat UI
+│
+└── App.jsx
+```
+
+## 🔗 Links
+
+- 🔗 [GitHub Repository](https://github.com/SurajPatel04/chatWebAppFrontend) _(Update with your repo link)_
+- 🌍 [Live Demo] (https://persona-link.vercel.app/)
+
+---
+
+## 📌 Future Enhancements
+
+- Save chat history
+- Dark mode
+- Login system
+- Model switching with explanation
+
+---
+
+## 👨‍💻 Author
+
+Built with by **[Suraj Patel]**
+
+---
