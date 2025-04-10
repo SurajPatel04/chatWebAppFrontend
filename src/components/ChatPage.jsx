@@ -115,7 +115,6 @@ function ChatPage() {
 
   return (
     <>
-      {/* Top Navbar with Persona & GitHub */}
       <AppBar
         position="sticky"
         sx={{
@@ -189,7 +188,12 @@ function ChatPage() {
             </Select>
             <IconButton
               color="inherit"
-              onClick={() => window.open("https://github.com/", "_blank")}
+              onClick={() =>
+                window.open(
+                  "https://github.com/SurajPatel04/chatWebAppFrontend",
+                  "_blank",
+                )
+              }
             >
               <GitHubIcon />
             </IconButton>
